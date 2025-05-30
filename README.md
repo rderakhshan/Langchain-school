@@ -60,7 +60,7 @@ langchain: Framework for building applications with LLMs.
 langchain-openai: LangChain integration for OpenAI models.
 python-dotenv: Loads environment variables from a .env file.
 
-# SNotes
+# Notes
 
 The script uses the gpt-4o model. Ensure your OpenAI API key has access to this model.
 The read_file_txt utility function is assumed to be defined in src/utilities/utils.py. Ensure it is implemented to read text files correctly.
