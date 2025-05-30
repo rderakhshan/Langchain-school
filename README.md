@@ -42,7 +42,7 @@ Run the script:python src/main.py
 
 The script will output an SEO-friendly description for the article titled "Unlocking the Future: The Rise of Neuro-Symbolic AI Agents".
 
-Project Structure
+## Project Structure
 neuro-symbolic-ai-description-generator/
 ├── src/
 │   ├── datapool/
@@ -60,13 +60,13 @@ langchain: Framework for building applications with LLMs.
 langchain-openai: LangChain integration for OpenAI models.
 python-dotenv: Loads environment variables from a .env file.
 
-Notes
+# SNotes
 
 The script uses the gpt-4o model. Ensure your OpenAI API key has access to this model.
 The read_file_txt utility function is assumed to be defined in src/utilities/utils.py. Ensure it is implemented to read text files correctly.
 The article file path is hardcoded in the script. Modify article_source_path and article_content as needed.
 
-Contributing
+# Contributing
 Contributions are welcome! Please submit a pull request or open an issue for any bugs, feature requests, or improvements.
 License
 This project is licensed under the MIT License. See the LICENSE file for details.
