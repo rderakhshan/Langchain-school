@@ -1,11 +1,12 @@
 import os
 from dotenv import load_dotenv
-from pydantic import BaseModel, Field
-from langchain_openai import ChatOpenAI
-from langchain.prompts import ChatPromptTemplate
-from langchain.prompts import SystemMessagePromptTemplate, HumanMessagePromptTemplate
+from langsmith import traceable                                                       # Importing traceable for tracing function calls
+from pydantic import BaseModel, Field                                                 # Importing necessary libraries
+from langchain_openai import ChatOpenAI                                               # Importing ChatOpenAI for OpenAI chat models
+from langchain.prompts import ChatPromptTemplate                                      # Importing ChatPromptTemplate for creating chat prompts
+from langchain.prompts import SystemMessagePromptTemplate, HumanMessagePromptTemplate # Importing message templates for system and human prompts
 
-
+# Importing utility function
 from src.utilities.utils import read_file_txt
 
 # Load environment variables from .env file
@@ -52,13 +53,9 @@ system_prompt = SystemMessagePromptTemplate.from_template(
 user_prompt = HumanMessagePromptTemplate.from_template(
     f"""You are tasked with creating a description for
 the article. The article is here for you to examine:
-
 ---
-
 {article}
-
 ---
-
 You should, first output the article title, then
 write a concise, SEO-friendly description that summarizes the article's content.
 It should be engaging and informative, ideally between 450-500 characters.""",
@@ -67,7 +64,6 @@ It should be engaging and informative, ideally between 450-500 characters.""",
 
 prompt = ChatPromptTemplate.from_messages([system_prompt, user_prompt])
 # print(first_prompt.format(article = article))
-
 
 # chain : inputs: article / output: article_para
 chain = (
@@ -81,7 +77,16 @@ chain = (
     }
 )
 
-result = chain.invoke({"article": article})
-
-print(result)
+# result = chain.invoke({"article": article})
+# print(result)
  
+@traceable(name = "run_app", description = "Run the app to generate article description")
+
+def run_app():
+    result = chain.invoke({"article": article})
+    print(result)
+    # return result
+
+if __name__ == "__main__":
+    # Run the app if this script is executed directly       
+    run_app()
