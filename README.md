@@ -1,60 +1,72 @@
-# LangChain Course
+# Description
+This project is a Python-based tool that generates SEO-friendly article descriptions using the LangChain framework and OpenAI's GPT-4o model. It reads an article from a text file, processes it with a creative language model configuration, and produces a concise description optimized for search engine visibility.
 
-Welcome to the LangChain course by Aurelio AI!
+# Features
 
-## Getting Started
+Article Processing: Reads article content from a specified text file.
+SEO-Friendly Output: Generates descriptions tailored for search engine optimization.
+LangChain Integration: Utilizes LangChain's prompt templates and chaining for structured AI interactions.
+Configurable Models: Supports creative response generation using OpenAI's GPT-4o model with adjustable temperature settings.
 
-### Python Environment (IMPORTANT)
+Prerequisites
 
-This course repo contains everything you need to install an exact duplicate Python environment as used during the course creation. 
+Python 3.8+
+Required Python packages (listed in requirements.txt):
+langchain
+langchain-openai
+python-dotenv
 
-#### Installing Python Venvs
 
-The Python packages are managed using the [uv](https://github.com/astral-sh/uv) package manager, and so we must install `uv` as a prerequisite for the course. We do so by following the [installation guide](https://docs.astral.sh/uv/#getting-started). For Mac users, as of 22 Oct 2024 enter the following in your terminal:
+An OpenAI API key stored in a .env file.
+A text file containing the article content (e.g., article.txt) in the specified directory.
 
-```
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
+Installation
 
-Once `uv` is installed and available in your terminal you can navigate to the course root directory and execute:
+Clone the repository:git clone https://github.com/your-username/neuro-symbolic-ai-description-generator.git
+cd neuro-symbolic-ai-description-generator
 
-```
-uv python install 3.12.7
-uv venv --python 3.12.7
-uv sync
-```
 
-> ❗️ You may need to restart the terminal if the `uv` command is not recognized by your terminal.
+Install dependencies:pip install -r requirements.txt
 
-With that we have our chapter venv installed. When working through the code for a specific chapter, always create a new venv to avoid dependency hell.
 
-#### Using Venv in VS Code / Cursor
+Create a .env file in the project root and add your OpenAI API key:OPENAI_API_KEY=your-api-key-here
 
-To use our new venv in VS Code or Cursor we simply execute:
 
-```
-cd example-chapter
-cursor .  # run via Cursor
-code .    # run via VS Code
-```
+Place your article text file (e.g., article.txt) in the src/datapool/ directory.
 
-This command will open a new code window, from here you open the relevant files (like Jupyter notebook files), click on the top-right **Select Environment**, click **Python Environments...**, and choose the top `.venv` environment provided.
+Usage
 
-#### Uninstalling Venvs
+Ensure the article file path and name are correctly specified in the script (article_source_path and article_content).
+Run the script:python src/main.py
 
-Naturally, we might not want to keep all of these venvs clogging up the memory on our system, so after completing the course we recommend removing the venv with:
 
-```
-deactivate
-rm -rf .venv -r
-```
+The script will output an SEO-friendly description for the article titled "Unlocking the Future: The Rise of Neuro-Symbolic AI Agents".
 
-### Ollama
+Project Structure
+neuro-symbolic-ai-description-generator/
+├── src/
+│   ├── datapool/
+│   │   └── article.txt           # Input article file
+│   ├── utilities/
+│   │   └── utils.py             # Utility functions (e.g., read_file_txt)
+│   └── main.py                  # Main script for generating descriptions
+├── .env                         # Environment variables (not tracked)
+├── requirements.txt             # Python dependencies
+└── README.md                    # This file
 
-The course can be run using OpenAI or Ollama. If using Ollama, you must go to [ollama.com](https://ollama.com/) and install Ollama for your respective OS (MacOS is recommended).
+Dependencies
 
-Whenever an LLM is used via Ollama you must:
+langchain: Framework for building applications with LLMs.
+langchain-openai: LangChain integration for OpenAI models.
+python-dotenv: Loads environment variables from a .env file.
 
-1. Ensure Ollama is running by executing `ollama serve` in your terminal or running the Ollama application. Make sure to keep note of the port the server is running on, by default Ollama runs on `http://localhost:11434`
+Notes
 
-2. Download the LLM being used in your current example using `ollama pull`. For example, to download Llama 3.2 3B, we execute `ollama pull llama 3.2:3b` in our terminal.
+The script uses the gpt-4o model. Ensure your OpenAI API key has access to this model.
+The read_file_txt utility function is assumed to be defined in src/utilities/utils.py. Ensure it is implemented to read text files correctly.
+The article file path is hardcoded in the script. Modify article_source_path and article_content as needed.
+
+Contributing
+Contributions are welcome! Please submit a pull request or open an issue for any bugs, feature requests, or improvements.
+License
+This project is licensed under the MIT License. See the LICENSE file for details.
