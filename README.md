@@ -54,11 +54,11 @@ neuro-symbolic-ai-description-generator/
 ├── requirements.txt             # Python dependencies
 └── README.md                    # This file
 
-Dependencies
+# Dependencies
 
-langchain: Framework for building applications with LLMs.
-langchain-openai: LangChain integration for OpenAI models.
-python-dotenv: Loads environment variables from a .env file.
+### langchain: Framework for building applications with LLMs.
+### langchain-openai: LangChain integration for OpenAI models.
+### python-dotenv: Loads environment variables from a .env file.
 
 # Notes
 
