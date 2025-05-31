@@ -1,92 +1,61 @@
 import os
-from dotenv import load_dotenv
-from langsmith import traceable                                                       # Importing traceable for tracing function calls
-from pydantic import BaseModel, Field                                                 # Importing necessary libraries
-from langchain_openai import ChatOpenAI                                               # Importing ChatOpenAI for OpenAI chat models
-from langchain.prompts import ChatPromptTemplate                                      # Importing ChatPromptTemplate for creating chat prompts
-from langchain.prompts import SystemMessagePromptTemplate, HumanMessagePromptTemplate # Importing message templates for system and human prompts
-
-# Importing utility function
-from src.utilities.utils import read_file_txt
+import streamlit as st                                                   # Importing Streamlit for web app interface 
+from dotenv import load_dotenv                                           # Load environment variables from .env file
+from langsmith import traceable                                          # Importing traceable for tracing function calls
+from pydantic import BaseModel, Field                                    # Importing necessary libraries
+from langchain_openai import ChatOpenAI                                  # Importing ChatOpenAI for OpenAI chat models
+from langchain_core.runnables.history import RunnableWithMessageHistory  # Importing RunnableWithMessageHistory for managing chat history 
+from langchain_core.chat_history import InMemoryChatMessageHistory       # Importing InMemoryChatMessageHistory for storing chat messages in memory
+from langchain_core.prompts import (ChatPromptTemplate,
+                                        MessagesPlaceholder,
+                                        SystemMessagePromptTemplate,
+                                        HumanMessagePromptTemplate,
+                                    )                                    # Importing necessary prompt templates for chat interactions
 
 # Load environment variables from .env file
 load_dotenv()
 
-# Read the article content from the specified file
-article_source_path = "./src/datapool/"  # Replace with your file path
-article_content     = "article.txt"
-article             = read_file_txt(article_source_path, article_content)
-article_title       = "Unlocking the Future: The Rise of Neuro-Symbolic AI Agents"
+# Initialize the LLM (OpenAI's GPT-4o)
+llm    = ChatOpenAI( temperature = 0.7,
+                     model = "gpt-4o-mini",
+                     openai_api_key = os.getenv("OPENAI_API_KEY"),
+                    )
 
+# Define the prompt template
+prompt = ChatPromptTemplate.from_messages([ SystemMessagePromptTemplate.from_template("You are a helpful AI assistant."),
+                                            MessagesPlaceholder(variable_name = "history"),
+                                            HumanMessagePromptTemplate.from_template("{input}"),
+                                        ])
 
-# Initialize the OpenAI chat models with different configurations
-creative_llm = ChatOpenAI(
-    temperature=0.7,  # Higher temperature for more creative responses
-    model="gpt-4o",  # Note: "gpt-4o-mini" is not a valid model name
-    openai_api_key=os.getenv("OPENAI_API_KEY")
-)
+# Create the runnable chain (prompt + LLM)
+pipeline = prompt | llm
 
-# For accurate responses
-accurate_llm = ChatOpenAI(
-    temperature=0.0,
-    model="gpt-4o",  # Note: "gpt-4o-mini" is not a valid model name
-    openai_api_key=os.getenv("OPENAI_API_KEY")
-)
+# Wrap the chain with RunnableWithMessageHistory
+pipeline = RunnableWithMessageHistory( runnable              = pipeline,
+                                        get_session_history  = lambda session_id: InMemoryChatMessageHistory(),  # Always return the same history
+                                        input_messages_key   = "input",                                          # Match the prompt's {input} variable
+                                        history_messages_key = "history"                                         # Match the prompt's history placeholder
+                                                )
 
+# Console-based chat loop
+def chat_loop():
+    session_id = "default"  # Fixed session ID for single-user console app
+    print("Chatbot: Hello! How can I assist you today?")
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() == "exit":
+            print("Chatbot: Goodbye!")
+            break
+        try:
+            # Get AI response with history
+            response = pipeline.invoke(
+                {"input": user_input},
+                config={"configurable": {"session_id": session_id}}
+            )
+            print(f"Chatbot: {response.content}")
+        except Exception as e:
+            print(f"Error: {str(e)}")
 
-class Paragraph(BaseModel):
-    original_paragraph: str = Field(description="The original paragraph")
-    edited_paragraph: str = Field(description="The improved edited paragraph")
-    feedback: str = Field(description=(
-        "Constructive feedback on the original paragraph"
-    ))
-
-structured_llm = creative_llm.with_structured_output(Paragraph)
-
-
-# Defining system prompt templates
-system_prompt = SystemMessagePromptTemplate.from_template(
-    f"""You are an AI assistant that helps generate article."""
-)
-
-# Defining human prompt templates
-user_prompt = HumanMessagePromptTemplate.from_template(
-    f"""You are tasked with creating a description for
-the article. The article is here for you to examine:
----
-{article}
----
-You should, first output the article title, then
-write a concise, SEO-friendly description that summarizes the article's content.
-It should be engaging and informative, ideally between 450-500 characters.""",
-    input_variables = ["article",]
-)
-
-prompt = ChatPromptTemplate.from_messages([system_prompt, user_prompt])
-# print(first_prompt.format(article = article))
-
-# chain : inputs: article / output: article_para
-chain = (
-    {"article": lambda x: x["article"]}
-    | prompt
-    | structured_llm
-    | {
-        "original_paragraph": lambda x: x.original_paragraph,
-        "edited_paragraph": lambda x: x.edited_paragraph,
-        "feedback": lambda x: x.feedback
-    }
-)
-
-# result = chain.invoke({"article": article})
-# print(result)
- 
-@traceable(name = "run_app", description = "Run the app to generate article description")
-
-def run_app():
-    result = chain.invoke({"article": article})
-    print(result)
-    # return result
-
+# Run the chat loop
 if __name__ == "__main__":
-    # Run the app if this script is executed directly       
-    run_app()
+    chat_loop()
