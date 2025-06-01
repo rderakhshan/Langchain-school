@@ -24,7 +24,7 @@ llm    = ChatOpenAI( temperature = 0.7,
 # Define the prompt template
 prompt = ChatPromptTemplate.from_messages([ SystemMessagePromptTemplate.from_template("You are a helpful AI assistant."),
                                             MessagesPlaceholder(variable_name = "history"),
-                                            HumanMessagePromptTemplate.from_template("{input}"),
+                                            HumanMessagePromptTemplate.from_template("{query}"),
                                         ])
 
 # Create the runnable chain (prompt + LLM)
@@ -33,7 +33,7 @@ pipeline = prompt | llm
 # Wrap the chain with RunnableWithMessageHistory
 pipeline = RunnableWithMessageHistory( runnable              = pipeline,
                                         get_session_history  = lambda session_id: InMemoryChatMessageHistory(),  # Always return the same history
-                                        input_messages_key   = "input",                                          # Match the prompt's {input} variable
+                                        query_messages_key   = "query",                                          # Match the prompt's {query} variable
                                         history_messages_key = "history"                                         # Match the prompt's history placeholder
                                                 )
 
@@ -42,14 +42,14 @@ def chat_loop():
     session_id = "default"  # Fixed session ID for single-user console app
     print("Chatbot: Hello! How can I assist you today?")
     while True:
-        user_input = input("You: ")
-        if user_input.lower() == "exit":
+        user_query = input("You: ")
+        if user_query.lower() == "exit":
             print("Chatbot: Goodbye!")
             break
         try:
             # Get AI response with history
             response = pipeline.invoke(
-                {"input": user_input},
+                {"query": user_query},
                 config={"configurable": {"session_id": session_id}}
             )
             print(f"Chatbot: {response.content}")
