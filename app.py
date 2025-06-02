@@ -1,143 +1,3 @@
-# from dotenv import load_dotenv
-# from langchain_openai import ChatOpenAI
-# from langchain.schema.output_parser import StrOutputParser
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
-# from langchain_core.prompts import (ChatPromptTemplate, SystemMessagePromptTemplate,
-#                                     HumanMessagePromptTemplate, MessagesPlaceholder)
-# import streamlit as st
-
-# # Load environment variables
-# load_dotenv()
-
-# # Initialize the LLM
-# llm = ChatOpenAI(temperature=0.5, model="gpt-4o-mini")
-
-# # Initialize chat history in Streamlit session state
-# if "chat_history" not in st.session_state:
-#     st.session_state.chat_history = []
-
-# # Create the prompt template with chat history
-# prompt = ChatPromptTemplate.from_messages([
-#     SystemMessagePromptTemplate.from_template("""You are an AI assistant that must answer the user's query.
-#                                                 You should be concise and to the point."""),
-#     MessagesPlaceholder(variable_name="chat_history"),  # Placeholder for conversation history
-#     HumanMessagePromptTemplate.from_template("{query}")
-# ])
-
-# # Define the pipeline
-# pipeline = ({"query": lambda x: x["query"], 
-#              "chat_history": lambda x: x["chat_history"]} | prompt | llm | StrOutputParser())
-
-# # Streamlit UI
-# st.title("Chat with AI Assistant")
-
-# # Display chat history
-# for message in st.session_state.chat_history:
-#     if isinstance(message, HumanMessage):
-#         with st.chat_message("user"):
-#             st.write(message.content)
-#     elif isinstance(message, AIMessage):
-#         with st.chat_message("assistant"):
-#             st.write(message.content)
-
-# # Input field for user query
-# query = st.chat_input("Enter your query (type 'exit' to quit):")
-
-# if query:
-#     if query.lower() == "exit":
-#         st.session_state.chat_history = []  # Clear history on exit
-#         st.write("Conversation ended.")
-#     else:
-#         # Display user query
-#         with st.chat_message("user"):
-#             st.write(query)
-        
-#         # Get AI response using history
-#         response = pipeline.invoke({"query": query, "chat_history": st.session_state.chat_history})
-        
-#         # Display AI response
-#         with st.chat_message("assistant"):
-#             st.write(response)
-        
-#         # Update chat history
-#         st.session_state.chat_history.append(HumanMessage(content=query))
-#         st.session_state.chat_history.append(AIMessage(content=response))
-
-#=======================================
-# import streamlit as st
-# from src.codes.backend.backend import get_authenticator
-# from streamlit_option_menu import option_menu
-
-# # Set page configuration
-# st.set_page_config(page_title="My Streamlit App", page_icon=":lock:", layout="centered")
-
-# # Hide Streamlit's default sidebar elements
-# st.markdown(
-#     """
-#     <style>
-#     /* Hide the default Streamlit sidebar header and navigation */
-#     [data-testid="stSidebarNav"] {
-#         display: none !important;
-#     }
-#     </style>
-#     """,
-#     unsafe_allow_html=True
-# )
-
-# # Initialize authenticator
-# authenticator = get_authenticator()
-# # Authentication
-# name, authentication_status, username = authenticator.login('Login', 'main')
-
-
-# if st.session_state.get('authentication_status'):
-#     # Sidebar menu using streamlit-option-menu
-#     with st.sidebar:
-#         st.title("Main Menu")
-#         st.markdown("<hr style='border: 1px solid #ccc;'>", unsafe_allow_html=True)
-#         selected = option_menu(
-#             None,
-#             ["Home", "Upload", "Tasks", "Settings"],
-#             icons=['house', 'cloud-upload', 'list-task', 'gear'],
-#             default_index=1,  # Default to "Upload"
-#             styles={
-#                 "container": {"padding": "5px", "background-color": "#f9f9f9"},
-#                 "icon": {"color": "black", "font-size": "20px", "margin-right": "10px"},
-#                 "nav-link": {
-#                     "font-size": "16px",
-#                     "text-align": "left",
-#                     "margin": "0px",
-#                     "padding": "10px 5px",
-#                     "--hover-color": "#f0f0f0",
-#                 },
-#                 "nav-link-selected": {"background-color": "#ff4b4b", "color": "white"},
-#             }
-#         )
-#         authenticator.logout('Logout', 'sidebar')  # Logout button in sidebar
-
-#     # Page content based on sidebar selection
-#     st.write(f"Welcome, {name}!")
-#     if selected == "Home":
-#         st.title("Home Page")
-#         st.write("This is the Home page content.")
-#     elif selected == "Upload":
-#         st.title("Upload Page")
-#         st.write("This is the Upload page content.")
-#         st.file_uploader("Upload a file", type=["txt", "pdf", "png", "jpg"])
-#     elif selected == "Tasks":
-#         st.title("Tasks Page")
-#         st.write("This is the Tasks page content.")
-#     elif selected == "Settings":
-#         st.title("Settings Page")
-#         st.write("This is the Settings page content.")
-# else:
-#     if st.session_state.get('authentication_status') is False:
-#         st.error("Username/password is incorrect")
-#     elif st.session_state.get('authentication_status') is None:
-#         st.warning("Please enter your username and password")
-        
-#=====================================
-
 """
 Gradio multipage UI with authentication and simple LangChain query processor
 """
@@ -284,6 +144,15 @@ def process_query(query):
     except Exception as e:
         print(f"Error processing query: {str(e)}")
         return "I encountered an error processing your request. Please try again."
+
+
+
+
+
+
+
+
+
 
 # Navigation functions
 def nav_home():
