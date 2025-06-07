@@ -17,7 +17,7 @@ load_dotenv()
 llm = ChatOpenAI(temperature = 0.5, 
                                 model = "gpt-4o-mini")
 #=======================================================================================================#
-# Implementation of simple cumulative memory for the chat history.                                      #
+# Method 1: Implementation of simple cumulative memory for the chat history.                            #
 #=======================================================================================================#
 # chat_history = []
 
@@ -50,7 +50,7 @@ llm = ChatOpenAI(temperature = 0.5,
 #         print(f"\nResponse: {response}")
 
 #=======================================================================================================#
-# Implementation of runnable with conversation buffer memory.                                           #
+# Method 2: Implementation of runnable with conversation buffer memory.                                 #
 #=======================================================================================================#
 
 # prompt = ChatPromptTemplate.from_messages([
@@ -101,7 +101,7 @@ llm = ChatOpenAI(temperature = 0.5,
 #         print(f"\nResponse: {response}")
 
 #=======================================================================================================#
-# Implementation of runnable with conversation buffer window memory.                                    #
+# Method 3: Implementation of runnable with conversation buffer window memory.                          #
 #=======================================================================================================#
 
 # Define the prompt template
